@@ -24,6 +24,7 @@ passwordInput.onblur = function() {
 passwordInput.onkeyup = function() {
     // Validate lowercase letters
     var lowerCaseLetters = /[a-z]/g;
+
     if(passwordInput.value.match(lowerCaseLetters)) {
       letter.classList.remove("invalid");
       letter.classList.add("valid");
@@ -66,8 +67,13 @@ async function resetPassword() {
     try {
         console.log(passwordInput.value)
         console.log(cnfrmPasswordInput.value)
-       if (passwordInput.value==cnfrmPasswordInput.value)
-    {let res = await fetch(`http://localhost:8080/resetpassword`,{
+
+        const passwordValidateRegEx = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
+        
+        var validPwd = passwordValidateRegEx.test(passwordInput.value); // will return true if password is valid otherwise false
+
+        if (passwordInput.value==cnfrmPasswordInput.value && validPwd) {    
+        let res = await fetch(`http://localhost:8080/resetpassword`,{
             method:"POST", 
             method: "PUT",
             headers: {
